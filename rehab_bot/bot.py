@@ -26,7 +26,7 @@ def get_db_connection():
         connection = mysql.connector.connect(
             host="localhost",
             user="root",
-            password="",
+            password="24012006",
             database="feedbacks"
         )
         return connection
@@ -83,7 +83,7 @@ async def glory_detox_info(message: types.Message):
     info_text = (
         "<b>🏥 GLORY DETOX</b>\n\n"
         "<b>Адрес:</b> Узбекистан, город Ташкент, район Мирзо-Улугбека, улица Феруза, 32\n\n"
-        "<b>Контактный телефон:</b> +998992002008"
+        "<b>Контактный телефон:</b> +12456879"
     )
     photo_path = "images/our.png"
     if os.path.exists(photo_path):
@@ -102,7 +102,7 @@ async def freedom_detox_info(message: types.Message):
     info_text = (
         "<b>🏥 FREEDOM DETOX</b>\n\n"
         "<b>Адрес:</b> Узбекистан, город Ташкент, район Олмазор, Аллон МФЙ, улица Фаробий, дом 320-А.\n\n"
-        "<b>Контактный телефон:</b> +998777272277"
+        "<b>Контактный телефон:</b> +123456"
     )
     photo_path = "images/our.png"
     if os.path.exists(photo_path):
@@ -158,11 +158,18 @@ async def psychologist_1_info(message: types.Message):
     keyboard.add(button)
     
     photo_path = "images/karlen.jpg"
-    with open(photo_path, "rb") as photo:
-        await bot.send_photo(
-            chat_id=message.chat.id,
-            photo=photo,
-            caption=info_text,
+    if os.path.exists(photo_path):
+        with open(photo_path, "rb") as photo:
+            await bot.send_photo(
+                chat_id=message.chat.id,
+                photo=photo,
+                caption=info_text,
+                parse_mode="HTML",
+                reply_markup=keyboard
+            )
+    else:
+        await message.answer(
+            text=info_text,
             parse_mode="HTML",
             reply_markup=keyboard
         )
@@ -180,14 +187,23 @@ async def psychologist_2_info(message: types.Message):
     keyboard.add(button)
     
     photo_path = "images/elena.jpg"
-    with open(photo_path, "rb") as photo:
-        await bot.send_photo(
-            chat_id=message.chat.id,
-            photo=photo,
-            caption=info_text,
+    if os.path.exists(photo_path):
+        with open(photo_path, "rb") as photo:
+            await bot.send_photo(
+                chat_id=message.chat.id,
+                photo=photo,
+                caption=info_text,
+                parse_mode="HTML",
+                reply_markup=keyboard
+            )
+    else:
+        # If image is not found, send just the text and keyboard
+        await message.answer(
+            text=info_text,
             parse_mode="HTML",
             reply_markup=keyboard
         )
+
 
 # Обработчик для кнопки "Нурматова Фатима Пулатовна"
 @dp.message_handler(text="Нурматова Фатима Пулатовна")
@@ -200,24 +216,36 @@ async def psychologist_3_info(message: types.Message):
     keyboard = InlineKeyboardMarkup()
     button = InlineKeyboardButton(text="Записаться на прием", url="tg://resolve?domain=maryfound")
     keyboard.add(button)
-    
+
+    # Путь к изображению
     photo_path = "images/fatima.jpg"
-    with open(photo_path, "rb") as photo:
-        await bot.send_photo(
-            chat_id=message.chat.id,
-            photo=photo,
-            caption=info_text,
+    
+    # Проверка, существует ли изображение
+    if os.path.exists(photo_path):
+        with open(photo_path, "rb") as photo:
+            await bot.send_photo(
+                chat_id=message.chat.id,
+                photo=photo,
+                caption=info_text,
+                parse_mode="HTML",
+                reply_markup=keyboard
+            )
+    else:
+        # Если изображение не найдено, отправляем только текст с кнопкой
+        await message.answer(
+            info_text,
             parse_mode="HTML",
             reply_markup=keyboard
         )
+
 
 # Обработчик для кнопки "📍 Адреса"
 @dp.message_handler(text="📍 Адреса")
 async def locations(message: types.Message):
     info_text = (
         "<b>Наши клиники расположены по следующим адресам:</b>\n\n"
-        "1. <b>GLORY DETOX</b> — Узбекистан, город Ташкент, район Мирзо-Улугбека, улица Феруза, 32\n\n"
-        "2. <b>FREEDOM DETOX</b> — Узбекистан, город Ташкент, район Олмазор, Аллон МФЙ, улица Фаробий, дом 320-А."
+        "1. <b>GLORY DETOX</b> — Узбекистан, город Ташкент\n\n"
+        "2. <b>FREEDOM DETOX</b> — Узбекистан, город Ташкент."
     )
     photo_path = "images/address.png"
     with open(photo_path, "rb") as photo:
@@ -238,7 +266,6 @@ async def about_us(message: types.Message):
         "🔹 <i>Психологические консультации</i>\n\n"
         "<b>Наши клиники работают с высококвалифицированными специалистами,</b> "
         "которые помогут вам на пути к восстановлению.\n\n"
-        "<b>Наш сайт:</b> <a href='https://narkologicheskaya-klinika.uz/'>narkologicheskaya-klinika.uz</a>"
     )
     photo_path = "images/aboutus.png"
     with open(photo_path, "rb") as photo:
