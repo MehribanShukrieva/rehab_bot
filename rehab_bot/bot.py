@@ -14,7 +14,7 @@ from mysql.connector import Error
 logging.basicConfig(level=logging.INFO)
 
 # Токен Telegram-бота
-BOT_TOKEN = "8013691624:AAG0iXy9Ysd4K0ii_-ADwt33D0PVZsYypF4"
+BOT_TOKEN = ""
 
 bot = Bot(token=BOT_TOKEN)
 storage = MemoryStorage()
