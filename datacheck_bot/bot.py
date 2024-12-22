@@ -3,8 +3,8 @@ import mysql.connector
 import time
 
 # Telegram Bot API Token и ваш Chat ID
-BOT_TOKEN = "7567978187:AAGfqPdDGb7kpoSVFhrqbUYa0O7YSjMg_no"
-CHAT_ID = "7736416423"  
+BOT_TOKEN = ""
+CHAT_ID = ""  
 
 # Подключение к базе данных MySQL
 DB_HOST = 'localhost'
