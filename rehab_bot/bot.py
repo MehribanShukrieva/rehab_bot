@@ -1,4 +1,5 @@
 from aiogram import Bot, Dispatcher, types
+from aiogram.types import ReplyKeyboardRemove
 from aiogram.types import ReplyKeyboardMarkup, InlineKeyboardMarkup, InlineKeyboardButton, KeyboardButton
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.utils import executor
@@ -10,17 +11,14 @@ import os
 import mysql.connector
 from mysql.connector import Error
 
-# Настройка логирования
 logging.basicConfig(level=logging.INFO)
 
-# Токен Telegram-бота
 BOT_TOKEN = ""
 
 bot = Bot(token=BOT_TOKEN)
 storage = MemoryStorage()
 dp = Dispatcher(bot, storage=storage)
 
-# Подключение к базе данных MySQL 
 def get_db_connection():
     try:
         connection = mysql.connector.connect(
@@ -34,15 +32,14 @@ def get_db_connection():
         logging.error(f"Ошибка подключения к базе данных: {e}")
         return None
 
-# Состояния для формы заказа звонка
 class CallbackRequest(StatesGroup):
-    name = State()  
+    name = State() 
     phone_number = State()  
 
 # Состояния для формы обратной связи
 class FeedbackForm(StatesGroup):
-    rating = State()  
-    feedback_text = State()  
+    rating = State()  # Состояние для рейтинга
+    feedback_text = State()  # Состояние для текста отзыва
 
 # Главная клавиатура
 @dp.message_handler(commands=['start'])
@@ -83,9 +80,9 @@ async def glory_detox_info(message: types.Message):
     info_text = (
         "<b>🏥 GLORY DETOX</b>\n\n"
         "<b>Адрес:</b> Узбекистан, город Ташкент, район Мирзо-Улугбека, улица Феруза, 32\n\n"
-        "<b>Контактный телефон:</b> +12456879"
+        "<b>Контактный телефон:</b> +998992002008"
     )
-    photo_path = "images/our.png"
+    photo_path = "images/glorydetox.jpg"
     if os.path.exists(photo_path):
         with open(photo_path, "rb") as photo:
             await bot.send_photo(
@@ -102,7 +99,7 @@ async def freedom_detox_info(message: types.Message):
     info_text = (
         "<b>🏥 FREEDOM DETOX</b>\n\n"
         "<b>Адрес:</b> Узбекистан, город Ташкент, район Олмазор, Аллон МФЙ, улица Фаробий, дом 320-А.\n\n"
-        "<b>Контактный телефон:</b> +123456"
+        "<b>Контактный телефон:</b> +998777272277"
     )
     photo_path = "images/our.png"
     if os.path.exists(photo_path):
@@ -158,18 +155,11 @@ async def psychologist_1_info(message: types.Message):
     keyboard.add(button)
     
     photo_path = "images/karlen.jpg"
-    if os.path.exists(photo_path):
-        with open(photo_path, "rb") as photo:
-            await bot.send_photo(
-                chat_id=message.chat.id,
-                photo=photo,
-                caption=info_text,
-                parse_mode="HTML",
-                reply_markup=keyboard
-            )
-    else:
-        await message.answer(
-            text=info_text,
+    with open(photo_path, "rb") as photo:
+        await bot.send_photo(
+            chat_id=message.chat.id,
+            photo=photo,
+            caption=info_text,
             parse_mode="HTML",
             reply_markup=keyboard
         )
@@ -187,23 +177,14 @@ async def psychologist_2_info(message: types.Message):
     keyboard.add(button)
     
     photo_path = "images/elena.jpg"
-    if os.path.exists(photo_path):
-        with open(photo_path, "rb") as photo:
-            await bot.send_photo(
-                chat_id=message.chat.id,
-                photo=photo,
-                caption=info_text,
-                parse_mode="HTML",
-                reply_markup=keyboard
-            )
-    else:
-        # If image is not found, send just the text and keyboard
-        await message.answer(
-            text=info_text,
+    with open(photo_path, "rb") as photo:
+        await bot.send_photo(
+            chat_id=message.chat.id,
+            photo=photo,
+            caption=info_text,
             parse_mode="HTML",
             reply_markup=keyboard
         )
-
 
 # Обработчик для кнопки "Нурматова Фатима Пулатовна"
 @dp.message_handler(text="Нурматова Фатима Пулатовна")
@@ -216,36 +197,24 @@ async def psychologist_3_info(message: types.Message):
     keyboard = InlineKeyboardMarkup()
     button = InlineKeyboardButton(text="Записаться на прием", url="tg://resolve?domain=maryfound")
     keyboard.add(button)
-
-    # Путь к изображению
-    photo_path = "images/fatima.jpg"
     
-    # Проверка, существует ли изображение
-    if os.path.exists(photo_path):
-        with open(photo_path, "rb") as photo:
-            await bot.send_photo(
-                chat_id=message.chat.id,
-                photo=photo,
-                caption=info_text,
-                parse_mode="HTML",
-                reply_markup=keyboard
-            )
-    else:
-        # Если изображение не найдено, отправляем только текст с кнопкой
-        await message.answer(
-            info_text,
+    photo_path = "images/fatima.jpg"
+    with open(photo_path, "rb") as photo:
+        await bot.send_photo(
+            chat_id=message.chat.id,
+            photo=photo,
+            caption=info_text,
             parse_mode="HTML",
             reply_markup=keyboard
         )
-
 
 # Обработчик для кнопки "📍 Адреса"
 @dp.message_handler(text="📍 Адреса")
 async def locations(message: types.Message):
     info_text = (
         "<b>Наши клиники расположены по следующим адресам:</b>\n\n"
-        "1. <b>GLORY DETOX</b> — Узбекистан, город Ташкент\n\n"
-        "2. <b>FREEDOM DETOX</b> — Узбекистан, город Ташкент."
+        "1. <b>GLORY DETOX</b> — Узбекистан, город Ташкент, район Мирзо-Улугбека, улица Феруза, 32\n\n"
+        "2. <b>FREEDOM DETOX</b> — Узбекистан, город Ташкент, район Олмазор, Аллон МФЙ, улица Фаробий, дом 320-А."
     )
     photo_path = "images/address.png"
     with open(photo_path, "rb") as photo:
@@ -266,6 +235,7 @@ async def about_us(message: types.Message):
         "🔹 <i>Психологические консультации</i>\n\n"
         "<b>Наши клиники работают с высококвалифицированными специалистами,</b> "
         "которые помогут вам на пути к восстановлению.\n\n"
+        "<b>Наш сайт:</b> <a href='https://narkologicheskaya-klinika.uz/'>narkologicheskaya-klinika.uz</a>"
     )
     photo_path = "images/aboutus.png"
     with open(photo_path, "rb") as photo:
@@ -459,10 +429,38 @@ async def process_phone_number(message: types.Message, state: FSMContext):
             finally:
                 connection.close()
 
-        await state.finish()  
+        await state.finish()  # Завершаем процесс
         await main_menu(message)
 
-
+# Обработчик для кнопки "📝 Записаться на прием"
+@dp.message_handler(text="📝 Записаться на прием")
+async def book_appointment(message: types.Message):
+    info_text = (
+        "<b>Записаться на прием</b>\n\n"
+        "Для записи на прием, пожалуйста, нажмите на кнопку ниже. "
+        "Опишите кратко вашу проблему или причину визита, чтобы мы могли помочь вам максимально быстро и эффективно.\n\n"
+        "Мы всегда готовы помочь вам!"
+    )
+    
+    keyboard = InlineKeyboardMarkup()
+    appointment_button = InlineKeyboardButton(
+        text="Записаться на прием",
+        url="tg://resolve?domain=maryfound"
+    )
+    keyboard.add(appointment_button)
+    
+    photo_path = "images/appointment.png"  # Опционально, картинка для этого раздела
+    if os.path.exists(photo_path):
+        with open(photo_path, "rb") as photo:
+            await bot.send_photo(
+                chat_id=message.chat.id,
+                photo=photo,
+                caption=info_text,
+                parse_mode="HTML",
+                reply_markup=keyboard
+            )
+    else:
+        await message.answer(info_text, reply_markup=keyboard, parse_mode="HTML")
 
 # Запуск бота
 if __name__ == '__main__':
